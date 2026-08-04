@@ -14,16 +14,19 @@ export default function MapPickerModal({ isOpen, onClose, onSelect, initialLat, 
     lon: initialLon || 74.3587
   });
 
-  // Reverse geocode lat/lon to get address via backend proxy
   const reverseGeocode = async (lat, lon) => {
+    setAddress('Fetching address...');
     try {
       const res = await geocodingAPI.reverse(lat, lon);
       const data = res.data;
       if (data && data.display_name) {
         setAddress(data.display_name);
+      } else {
+        setAddress(`Coordinates: ${lat.toFixed(4)}, ${lon.toFixed(4)}`);
       }
     } catch (error) {
       console.error('Error reverse geocoding:', error);
+      setAddress(`Coordinates: ${lat.toFixed(4)}, ${lon.toFixed(4)}`);
     }
   };
 
