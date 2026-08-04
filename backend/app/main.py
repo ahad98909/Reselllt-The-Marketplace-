@@ -21,6 +21,30 @@ from app.models import models
 # Ensure tables are built (fallback if running without Docker init.sql)
 try:
     Base.metadata.create_all(bind=engine)
+    
+    # Auto-seed categories if table is empty
+    from app.core.database import SessionLocal
+    db = SessionLocal()
+    try:
+        from app.models.models import Category
+        if db.query(Category).count() == 0:
+            print("Seeding initial categories...")
+            seed_categories = [
+                Category(id=1, name="Electronics", slug="electronics"),
+                Category(id=2, name="Vehicles", slug="vehicles"),
+                Category(id=3, name="Property", slug="property"),
+                Category(id=4, name="Fashion", slug="fashion"),
+                Category(id=5, name="Home & Garden", slug="home-garden"),
+                Category(id=6, name="Hobbies & Sports", slug="hobbies-sports")
+            ]
+            db.bulk_save_objects(seed_categories)
+            db.commit()
+            print("Seeding complete.")
+    except Exception as se:
+        print(f"Auto-seeding warning: {se}")
+        db.rollback()
+    finally:
+        db.close()
 except Exception as e:
     print(f"Database sync warning: {e}")
 
