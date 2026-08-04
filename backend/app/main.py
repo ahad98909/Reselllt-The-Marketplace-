@@ -60,16 +60,20 @@ app = FastAPI(
 def health_check(db: Session = Depends(get_db)):
     try:
         from sqlalchemy import text
+        from app.services.image_storage import CLOUDINARY_AVAILABLE
         db.execute(text("SELECT 1"))
         return {
             "status": "healthy",
             "database": "connected",
+            "cloudinary_active": CLOUDINARY_AVAILABLE,
             "host": settings.MYSQL_HOST[:5] + "..." if len(settings.MYSQL_HOST) > 5 else settings.MYSQL_HOST
         }
     except Exception as e:
+        from app.services.image_storage import CLOUDINARY_AVAILABLE
         return {
             "status": "unhealthy",
             "database": "error",
+            "cloudinary_active": CLOUDINARY_AVAILABLE,
             "error": str(e),
             "host": settings.MYSQL_HOST[:5] + "..." if len(settings.MYSQL_HOST) > 5 else settings.MYSQL_HOST
         }
