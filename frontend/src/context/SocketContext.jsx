@@ -54,6 +54,60 @@ export const SocketProvider = ({ children }) => {
     }
   }, [user]);
 
+  // HTTP Polling Fallback when WebSocket is not connected/supported (e.g. Vercel)
+  useEffect(() => {
+    if (!token || !user) return;
+
+    const pollInterval = setInterval(async () => {
+      // Only poll if WebSocket is NOT connected/open
+      if (socket && socket.readyState === 1) return; // 1 means WebSocket.OPEN
+
+      try {
+        // 1. Poll for messages in active chats
+        const chatIds = Object.keys(messageListeners.current);
+        for (const chatId of chatIds) {
+          const listeners = messageListeners.current[chatId];
+          if (listeners && listeners.length > 0) {
+            try {
+              const res = await chatsAPI.getChat(chatId);
+              const chatData = res.data;
+              if (chatData && chatData.messages) {
+                chatData.messages.forEach(msg => {
+                  listeners.forEach(cb => cb(msg));
+                });
+              }
+            } catch (err) {
+              console.error(`Failed to poll chat ${chatId}:`, err);
+            }
+          }
+        }
+
+        // 2. Poll for notifications
+        try {
+          const notifRes = await notificationsAPI.getNotifications();
+          const serverNotifs = notifRes.data || [];
+          
+          setNotifications(prev => {
+            const prevIds = new Set(prev.map(n => n.id));
+            const newNotifs = serverNotifs.filter(n => !prevIds.has(n.id));
+            if (newNotifs.length > 0) {
+              setUnreadNotificationsCount(serverNotifs.filter(n => !n.is_read).length);
+              return serverNotifs;
+            }
+            return prev;
+          });
+        } catch (err) {
+          console.error("Failed to poll notifications:", err);
+        }
+
+      } catch (e) {
+        console.error("Polling error:", e);
+      }
+    }, 3000); // Poll every 3 seconds
+
+    return () => clearInterval(pollInterval);
+  }, [token, user, socket]);
+
   // Handle WebSocket Connection
   useEffect(() => {
     if (!token || !user) {
