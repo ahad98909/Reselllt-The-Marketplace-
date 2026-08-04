@@ -66,6 +66,9 @@ def health_check(db: Session = Depends(get_db)):
             "status": "healthy",
             "database": "connected",
             "cloudinary_active": CLOUDINARY_AVAILABLE,
+            "cloudinary_cloud_name": settings.CLOUDINARY_CLOUD_NAME,
+            "cloudinary_api_key_len": len(settings.CLOUDINARY_API_KEY),
+            "cloudinary_api_secret_len": len(settings.CLOUDINARY_API_SECRET),
             "host": settings.MYSQL_HOST[:5] + "..." if len(settings.MYSQL_HOST) > 5 else settings.MYSQL_HOST
         }
     except Exception as e:
@@ -74,6 +77,9 @@ def health_check(db: Session = Depends(get_db)):
             "status": "unhealthy",
             "database": "error",
             "cloudinary_active": CLOUDINARY_AVAILABLE,
+            "cloudinary_cloud_name": settings.CLOUDINARY_CLOUD_NAME,
+            "cloudinary_api_key_len": len(settings.CLOUDINARY_API_KEY),
+            "cloudinary_api_secret_len": len(settings.CLOUDINARY_API_SECRET),
             "error": str(e),
             "host": settings.MYSQL_HOST[:5] + "..." if len(settings.MYSQL_HOST) > 5 else settings.MYSQL_HOST
         }
