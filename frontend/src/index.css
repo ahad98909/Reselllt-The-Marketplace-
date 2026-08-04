@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'Outfit', 'Inter', sans-serif;
+  }
+}
+
+/* Glassmorphism overlays */
+.glass {
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.dark .glass {
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Premium Gradient Borders */
+.gradient-border {
+  position: relative;
+}
+.gradient-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: linear-gradient(to right, #218c53, #8eccab);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Custom Scrollbar for Chat & Feed */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.35);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.55);
+}
+
+/* Skeleton Loading Animation */
+@keyframes pulse-slow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .4; }
+}
+.animate-pulse-slow {
+  animation: pulse-slow 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}

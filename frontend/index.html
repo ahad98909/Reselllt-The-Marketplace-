@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛍️</text></svg>" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>ResellIt - The Premium Second-Hand Marketplace</title>
+    <!-- PWA settings for native mobile experience -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#123c26" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="ResellIt" />
+    <link rel="apple-touch-icon" href="https://img.icons8.com/color/192/shopping-bag.png" />
+    <!-- Modern Premium Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Leaflet Map CSS and JS CDN -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    
+    <!-- Runtime Error Overlay for Easy Debugging -->
+    <script>
+      window.addEventListener('error', function(event) {
+        var errorDiv = document.getElementById('error-overlay');
+        if (!errorDiv) {
+          errorDiv = document.createElement('div');
+          errorDiv.id = 'error-overlay';
+          errorDiv.style.position = 'fixed';
+          errorDiv.style.top = '0';
+          errorDiv.style.left = '0';
+          errorDiv.style.width = '100%';
+          errorDiv.style.height = '100%';
+          errorDiv.style.backgroundColor = 'rgba(15, 23, 42, 0.95)';
+          errorDiv.style.color = '#f87171';
+          errorDiv.style.padding = '32px';
+          errorDiv.style.fontFamily = 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace';
+          errorDiv.style.fontSize = '14px';
+          errorDiv.style.overflow = 'auto';
+          errorDiv.style.zIndex = '999999';
+          document.body.appendChild(errorDiv);
+        }
+        var message = event.message || (event.error && event.error.message) || 'Unknown error';
+        var stack = (event.error && event.error.stack) || '';
+        errorDiv.innerHTML = '<h2 style="font-size: 20px; font-weight: bold; margin-bottom: 16px;">🚨 Frontend Runtime Error</h2>' +
+          '<p style="margin-bottom: 8px;"><strong>Message:</strong> ' + message + '</p>' +
+          '<p style="margin-bottom: 16px;"><strong>File:</strong> ' + event.filename + ':' + event.lineno + ':' + event.colno + '</p>' +
+          '<pre style="white-space: pre-wrap; background: #0f172a; border: 1px border-slate-800; padding: 16px; border-radius: 12px; color: #e2e8f0; font-size: 13px; line-height: 1.6;">' + stack + '</pre>';
+      });
+      window.addEventListener('unhandledrejection', function(event) {
+        var errorDiv = document.getElementById('error-overlay');
+        if (!errorDiv) {
+          errorDiv = document.createElement('div');
+          errorDiv.id = 'error-overlay';
+          errorDiv.style.position = 'fixed';
+          errorDiv.style.top = '0';
+          errorDiv.style.left = '0';
+          errorDiv.style.width = '100%';
+          errorDiv.style.height = '100%';
+          errorDiv.style.backgroundColor = 'rgba(15, 23, 42, 0.95)';
+          errorDiv.style.color = '#f87171';
+          errorDiv.style.padding = '32px';
+          errorDiv.style.fontFamily = 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace';
+          errorDiv.style.fontSize = '14px';
+          errorDiv.style.overflow = 'auto';
+          errorDiv.style.zIndex = '999999';
+          document.body.appendChild(errorDiv);
+        }
+        var reason = event.reason || 'Unhandled promise rejection';
+        var message = reason.message || String(reason);
+        var stack = reason.stack || '';
+        errorDiv.innerHTML = '<h2 style="font-size: 20px; font-weight: bold; margin-bottom: 16px;">🚨 Unhandled Promise Rejection</h2>' +
+          '<p style="margin-bottom: 8px;"><strong>Message:</strong> ' + message + '</p>' +
+          '<pre style="white-space: pre-wrap; background: #0f172a; border: 1px border-slate-800; padding: 16px; border-radius: 12px; color: #e2e8f0; font-size: 13px; line-height: 1.6;">' + stack + '</pre>';
+      });
+    </script>
+  </head>
+  <body class="bg-slate-50 text-slate-900 transition-colors duration-200 dark:bg-slate-950 dark:text-slate-100">
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

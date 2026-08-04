@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: marketplace-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: marketplace
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: marketplace-backend
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - MYSQL_HOST=db
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=rootpassword
+      - MYSQL_DB=marketplace
+      - MYSQL_PORT=3306
+      - SECRET_KEY=supersecretkeychangeinproduction12345
+      - UPLOAD_DIR=uploads
+    volumes:
+      - ./uploads:/app/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: marketplace-frontend
+    restart: always
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+
+volumes:
+  db_data:
