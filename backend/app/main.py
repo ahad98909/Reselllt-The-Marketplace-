@@ -27,6 +27,24 @@ app = FastAPI(
     redoc_url="/redoc"
 )
 
+@app.get("/api/health")
+def health_check(db: Session = Depends(get_db)):
+    try:
+        from sqlalchemy import text
+        db.execute(text("SELECT 1"))
+        return {
+            "status": "healthy",
+            "database": "connected",
+            "host": settings.MYSQL_HOST[:5] + "..." if len(settings.MYSQL_HOST) > 5 else settings.MYSQL_HOST
+        }
+    except Exception as e:
+        return {
+            "status": "unhealthy",
+            "database": "error",
+            "error": str(e),
+            "host": settings.MYSQL_HOST[:5] + "..." if len(settings.MYSQL_HOST) > 5 else settings.MYSQL_HOST
+        }
+
 # CORS configurations
 app.add_middleware(
     CORSMiddleware,
