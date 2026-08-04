@@ -26,7 +26,20 @@ export default function Register() {
       await register(name, email, password, address, latitude, longitude);
       navigate('/');
     } catch (err) {
-      setError(err.response?.data?.detail || 'Registration failed. Try a different email.');
+      let errorMsg = 'Registration failed.';
+      if (err.response?.data) {
+        const data = err.response.data;
+        if (typeof data.detail === 'string') {
+          errorMsg = data.detail;
+        } else if (Array.isArray(data.detail)) {
+          errorMsg = data.detail.map(d => `${d.loc.join('.')}: ${d.msg}`).join(', ');
+        } else if (data.message) {
+          errorMsg = data.message;
+        }
+      } else if (err.message) {
+        errorMsg = err.message;
+      }
+      setError(errorMsg);
     } finally {
       setLoading(false);
     }
