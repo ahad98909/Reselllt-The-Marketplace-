@@ -61,7 +61,13 @@ app.add_middleware(
 
 # Mount uploaded files directory for local image access
 import os
-os.makedirs(settings.UPLOAD_DIR, exist_ok=True)
+try:
+    os.makedirs(settings.UPLOAD_DIR, exist_ok=True)
+except OSError:
+    # If the system is read-only (like Vercel), fall back to the /tmp directory
+    settings.UPLOAD_DIR = "/tmp/uploads"
+    os.makedirs(settings.UPLOAD_DIR, exist_ok=True)
+
 app.mount("/uploads", StaticFiles(directory=settings.UPLOAD_DIR), name="uploads")
 
 # Include Router endpoints
