@@ -1,4 +1,5 @@
 import os
+from pydantic import field_validator
 from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
@@ -13,6 +14,13 @@ class Settings(BaseSettings):
     MYSQL_PASSWORD: str = os.getenv("MYSQL_PASSWORD", "rootpassword")
     MYSQL_DB: str = os.getenv("MYSQL_DB", "marketplace")
     MYSQL_PORT: str = os.getenv("MYSQL_PORT", "3306")
+
+    @field_validator("MYSQL_HOST", "MYSQL_USER", "MYSQL_PASSWORD", "MYSQL_DB", "MYSQL_PORT", mode="before")
+    @classmethod
+    def strip_db_config(cls, v):
+        if isinstance(v, str):
+            return v.strip().replace("\r", "").replace("\n", "")
+        return v
 
     @property
     def DATABASE_URL(self) -> str:
