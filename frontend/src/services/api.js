@@ -48,7 +48,7 @@ api.interceptors.response.use(
 
 export const authAPI = {
   login: (email, password) => api.post('/auth/login', { email, password }),
-  register: (name, email, password, address, latitude, longitude) => api.post('/auth/register', { name, email, password, address, latitude, longitude }),
+  register: (name, email, password, address, latitude, longitude, gender) => api.post('/auth/register', { name, email, password, address, latitude, longitude, gender }),
   getMe: () => api.get('/auth/me'),
   verifyEmail: () => api.post('/auth/verify-email'),
   googleLogin: (email, name, picture) => api.post('/auth/google', { email, name, picture }),

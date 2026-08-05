@@ -30,13 +30,23 @@ def register(
     if (lat is None or lon is None) and user_in.address:
         lat, lon = geocode_address(user_in.address)
 
+    # Select avatar dynamically based on gender
+    avatar_url = "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" # Neutral / Default
+    if user_in.gender:
+        gender_lower = user_in.gender.lower().strip()
+        if gender_lower == "female":
+            avatar_url = "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150"
+        elif gender_lower == "male":
+            avatar_url = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150"
+
     # Hash password and create user
     hashed_password = security.get_password_hash(user_in.password)
     db_user = models.User(
         name=user_in.name,
         email=user_in.email,
         password_hash=hashed_password,
-        profile_picture="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150", # Default avatar
+        profile_picture=avatar_url,
+        gender=user_in.gender,
         rating=0.0,
         email_verified=False,
         address=user_in.address,

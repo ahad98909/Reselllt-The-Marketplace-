@@ -42,10 +42,10 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const register = async (name, email, password, address, latitude, longitude) => {
+  const register = async (name, email, password, address, latitude, longitude, gender) => {
     setLoading(true);
     try {
-      const res = await authAPI.register(name, email, password, address, latitude, longitude);
+      const res = await authAPI.register(name, email, password, address, latitude, longitude, gender);
       const accessToken = res.data.access_token;
       localStorage.setItem('token', accessToken);
       setToken(accessToken);

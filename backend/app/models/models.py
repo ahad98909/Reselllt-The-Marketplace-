@@ -10,6 +10,7 @@ class User(Base):
     email = Column(String(150), unique=True, index=True, nullable=False)
     password_hash = Column(String(255), nullable=False)
     profile_picture = Column(String(255), nullable=True)
+    gender = Column(String(20), nullable=True)
     rating = Column(Float, default=0.0)
     is_admin = Column(Boolean, default=False)
     is_banned = Column(Boolean, default=False)

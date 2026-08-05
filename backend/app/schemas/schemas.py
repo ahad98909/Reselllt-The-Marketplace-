@@ -22,6 +22,7 @@ class RegisterRequest(BaseModel):
     address: Optional[str] = None
     latitude: Optional[float] = None
     longitude: Optional[float] = None
+    gender: Optional[str] = None
 
 
 # --- USER SCHEMAS ---
@@ -36,6 +37,7 @@ class UserBase(BaseModel):
     address: Optional[str] = None
     latitude: Optional[float] = None
     longitude: Optional[float] = None
+    gender: Optional[str] = None
 
 class UserResponse(UserBase):
     id: int

@@ -22,6 +22,19 @@ from app.models import models
 try:
     Base.metadata.create_all(bind=engine)
     
+    # Dynamic migration to add gender column if missing
+    from sqlalchemy import text
+    with engine.begin() as conn:
+        try:
+            conn.execute(text("SELECT gender FROM Users LIMIT 1"))
+        except Exception:
+            print("Adding gender column to Users table...")
+            try:
+                conn.execute(text("ALTER TABLE Users ADD COLUMN gender VARCHAR(20) NULL"))
+                print("Successfully added gender column!")
+            except Exception as e:
+                print("Failed to add gender column:", e)
+
     # Auto-seed categories if table is empty
     from app.core.database import SessionLocal
     db = SessionLocal()

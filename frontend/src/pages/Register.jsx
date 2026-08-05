@@ -11,6 +11,7 @@ export default function Register() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [gender, setGender] = useState('other');
   const [address, setAddress] = useState('');
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
@@ -23,7 +24,7 @@ export default function Register() {
     setError('');
     setLoading(true);
     try {
-      await register(name, email, password, address, latitude, longitude);
+      await register(name, email, password, address, latitude, longitude, gender);
       navigate('/');
     } catch (err) {
       let errorMsg = 'Registration failed.';
@@ -94,6 +95,19 @@ export default function Register() {
               className="mt-1 w-full rounded-xl border border-slate-300 bg-transparent px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none dark:border-slate-700 text-slate-800 dark:text-slate-200"
               placeholder="At least 6 characters"
             />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">Gender</label>
+            <select
+              value={gender}
+              onChange={(e) => setGender(e.target.value)}
+              className="mt-1 w-full rounded-xl border border-slate-300 bg-transparent px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none dark:border-slate-700 text-slate-800 dark:text-slate-200 dark:bg-slate-900"
+            >
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other / Prefer not to say</option>
+            </select>
           </div>
 
           <div>
